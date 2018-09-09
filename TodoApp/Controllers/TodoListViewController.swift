@@ -12,18 +12,22 @@ class TodoListViewController: UITableViewController {
 
     var itemArray : [Item] = [Item]()
     
-    let defaults = UserDefaults.standard
+   // let defaults = UserDefaults.standard
+    
+    let dataFilePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("Items.plist")
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        //Persistance local data storage
-        if let items = defaults.array(forKey: "TodoListArray") as? [Item] {
+
+        //Persistance local data storage using UserDefaults
+   /*     if let items = defaults.array(forKey: "TodoListArray") as? [Item] {
             itemArray = items
         }
-        let newItem = Item()
-        newItem.title = "Find Mike"
-        itemArray.append(newItem)
+    */
+        
+        loadDataItems()
+        
+        
     }
 
     //TableView Datasource Methods
@@ -55,8 +59,9 @@ class TodoListViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
         itemArray[indexPath.row].done = !itemArray[indexPath.row].done
-
-        tableView.reloadData()
+        
+        saveDataItem()
+        
         //selected a cell -> cell is gray
         // with that after selecting the cell, it turns back to white
         tableView.deselectRow(at: indexPath, animated: true)
@@ -70,9 +75,9 @@ class TodoListViewController: UITableViewController {
         //Add a pop-up alert
         let alert = UIAlertController(title: "Add New Item", message: "", preferredStyle: .alert)
         
-        // button that we're going to pressed after we have written our new item
+        //button that we're going to pressed after we have written our new item
         let alertAction = UIAlertAction(title: "Add Item", style: .default) { (action) in
-            //xhat will happen once the user have pressed the button
+            //what will happen once the user have pressed the button
             // -> we add at the end of the itemArray the new item we create
             
             let newItem = Item()
@@ -80,9 +85,10 @@ class TodoListViewController: UITableViewController {
             
             self.itemArray.append(newItem)
            
-            self.defaults.set(self.itemArray, forKey: "TodoListArray")
+            // UserDefault
+            //self.defaults.set(self.itemArray, forKey: "TodoListArray")
             
-            self.tableView.reloadData()
+            self.saveDataItem()
             
         }
         
@@ -95,8 +101,35 @@ class TodoListViewController: UITableViewController {
         
         alert.addAction(alertAction)
         
-        // show the alert
+        //show the alert
         present(alert,animated: true, completion: nil)
+    }
+    
+    
+    //Model manipulation data
+    
+    private func saveDataItem() {
+        let encoder = PropertyListEncoder()
+        
+        do {
+            let data = try encoder.encode(itemArray)
+            try data.write(to: dataFilePath!)
+        } catch {
+            print(error)
+        }
+        
+        tableView.reloadData()
+    }
+    
+    func loadDataItems() {
+        if let data = try? Data(contentsOf: dataFilePath!) {
+            let decoder = PropertyListDecoder()
+            do {
+                itemArray = try decoder.decode([Item].self, from: data) //[Item].self reffers to the type of the data we want to decode
+            } catch {
+                print(error)
+            }
+        }
     }
     
     
