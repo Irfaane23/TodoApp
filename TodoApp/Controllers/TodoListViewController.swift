@@ -91,8 +91,6 @@ class TodoListViewController: UITableViewController {
             
             self.itemArray.append(newItem)
            
-            // UserDefault
-            //self.defaults.set(self.itemArray, forKey: "TodoListArray")
             
             self.saveDataItem()
         }
