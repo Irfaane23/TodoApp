@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		256FBEA721482397003B04A6 /* CategoryTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 256FBEA621482397003B04A6 /* CategoryTableViewController.swift */; };
 		25B204BC2144059000ED82BF /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25B204BB2144059000ED82BF /* AppDelegate.swift */; };
 		25B204BE2144059000ED82BF /* TodoListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25B204BD2144059000ED82BF /* TodoListViewController.swift */; };
 		25B204C12144059000ED82BF /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 25B204BF2144059000ED82BF /* Main.storyboard */; };
@@ -16,6 +17,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		256FBEA621482397003B04A6 /* CategoryTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryTableViewController.swift; sourceTree = "<group>"; };
 		25B204B82144059000ED82BF /* TodoApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TodoApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		25B204BB2144059000ED82BF /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		25B204BD2144059000ED82BF /* TodoListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoListViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
@@ -78,6 +80,7 @@
 		25B204D0214424AF00ED82BF /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				256FBEA621482397003B04A6 /* CategoryTableViewController.swift */,
 				25B204BD2144059000ED82BF /* TodoListViewController.swift */,
 			);
 			path = Controllers;
@@ -165,6 +168,7 @@
 				25B204BE2144059000ED82BF /* TodoListViewController.swift in Sources */,
 				25BC8C6C214547BF0067B587 /* DataModel.xcdatamodeld in Sources */,
 				25B204BC2144059000ED82BF /* AppDelegate.swift in Sources */,
+				256FBEA721482397003B04A6 /* CategoryTableViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -13,6 +13,12 @@ class TodoListViewController: UITableViewController {
 
     var itemArray : [Item] = [Item]()
     
+    var selectedCategory : Category? {
+        didSet {
+            loadDataItems()
+        }
+    }
+    
    // let defaults = UserDefaults.standard
     
     let dataFilePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("Items.plist")
@@ -81,6 +87,7 @@ class TodoListViewController: UITableViewController {
             let newItem = Item(context: self.context)
             newItem.title = textField.text!
             newItem.done = false // we have to specify this field because in the DataModel, we set the done attributes as not an optionnal
+            newItem.parentCategory = self.selectedCategory
             
             self.itemArray.append(newItem)
            
@@ -114,8 +121,19 @@ class TodoListViewController: UITableViewController {
         tableView.reloadData()
     }
     
-    func loadDataItems(with request : NSFetchRequest<Item> = Item.fetchRequest()) {
+    func loadDataItems(with request : NSFetchRequest<Item> = Item.fetchRequest(), predicate: NSPredicate? = nil) {
         //CRUD Version : Here we Read Data from the database
+        
+        let categoryPredicate = NSPredicate(format: "parentCategory.name MATCHES %@", selectedCategory!.name!)
+//        let compoundPredicate = NSCompoundPredicate(andPredicateWithSubpredicates: [categoryPredicate, predicate])
+        
+        if let additionalPredicate = predicate {
+            request.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [categoryPredicate, additionalPredicate])
+        }
+        else {
+            request.predicate = categoryPredicate
+
+        }
         do {
             itemArray = try context.fetch(request)
         } catch {
@@ -124,31 +142,18 @@ class TodoListViewController: UITableViewController {
         tableView.reloadData()
     }
     
-/*    private func staDataItemV1() {
-        //Version 1 : using a Codable class
-
-        let encoder = PropertyListEncoder()
-        
-        do {
-            let data = try encoder.encode(itemArray)
-            try data.write(to: dataFilePath!)
-            
-        } catch {
-            print(error)
+    // Edit a row cell of the tableView in order to delete an item in the itemArray 
+ /*   override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        return true
+    }
+    
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
+            itemArray.remove(at: indexPath.row)
+            tableView.reloadData()
         }
     }
- 
-    func loadDataItems() {
-        if let data = try? Data(contentsOf: dataFilePath!) {
-            let decoder = PropertyListDecoder()
-            do {
-                itemArray = try decoder.decode([Item].self, from: data) //[Item].self reffers to the type of the data we want to decode
-            } catch {
-                print(error)
-            }
-        }
-    }
- */
+    */
     
 }
 
@@ -159,11 +164,11 @@ extension TodoListViewController : UISearchBarDelegate {
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         let request : NSFetchRequest<Item> = Item.fetchRequest()
         
-        request.predicate = NSPredicate(format: "title CONTAINS[cd] %@", searchBar.text!)
+        let predicate = NSPredicate(format: "title CONTAINS[cd] %@", searchBar.text!)
         
         request.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
         
-        loadDataItems(with: request)
+        loadDataItems(with: request, predicate: predicate)
         
     }
     
@@ -184,18 +189,6 @@ extension TodoListViewController : UISearchBarDelegate {
     }
     
 }
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
